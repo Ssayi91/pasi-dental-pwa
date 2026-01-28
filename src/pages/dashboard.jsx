@@ -37,7 +37,6 @@ export default function Dashboard() {
     navigate('/login');
   };
 
-  // Navigation items
   const navItems = [
     { name: 'Dashboard', path: '/dashboard' },
     { name: 'Patients', path: '/patients' },
@@ -47,46 +46,67 @@ export default function Dashboard() {
   return (
     <div
       style={{
-        background: 'linear-gradient(135deg, #f0f9f4 0%, #e8f5e9 100%)',
+        // Background image (place your clinic image in public/pasi-bg.jpg)
+        backgroundImage: 'url(/pasi-bg.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+        backgroundColor: '#f0f9f4', // fallback
         minHeight: '100vh',
         padding: '24px',
         fontFamily: "'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif",
-        color: '#2d3748'
+        color: '#2d3748',
+        position: 'relative'
       }}
     >
-      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-        
-        {/* Header */}
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'flex-start',
-          marginBottom: '16px'
-        }}>
-          <div>
-            <h2 style={{ fontSize: '20px', color: '#4a5568', margin: '0 0 4px 0', fontWeight: '500' }}>
-              {getGreeting()}, Admin 👋
-            </h2>
-            <h1 style={{ fontSize: '24px', color: '#228B22', fontWeight: '600', margin: 0 }}>
-              Pasi Dental – Nairobi
-            </h1>
-          </div>
-          <button
-            onClick={handleLogout}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: '#228B22',
-              fontSize: '14px',
-              fontWeight: '500',
-              cursor: 'pointer',
-              textDecoration: 'underline'
-            }}
-          >
-            Logout
-          </button>
-        </div>
+      {/* Soft white overlay for readability */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(255, 255, 255, 0.85)',
+        zIndex: 0
+      }}></div>
 
+      {/* Content */}
+      <div style={{ maxWidth: '800px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
+        
+       {/* Header */}
+<div style={{ 
+  display: 'flex', 
+  justifyContent: 'space-between', 
+  alignItems: 'flex-start',
+  marginBottom: '16px'
+}}>
+  <div>
+    <h2 style={{ fontSize: '20px', color: '#4a5568', margin: '0 0 4px 0', fontWeight: '500' }}>
+      {getGreeting()}, Admin 👋
+    </h2>
+    <h1 style={{ fontSize: '24px', color: '#228B22', fontWeight: '600', margin: 0 }}>
+      Pasi Dental – Nairobi
+    </h1>
+  </div>
+  <button
+    onClick={handleLogout}
+    style={{
+      padding: '6px 12px',
+      backgroundColor: 'transparent',
+      color: '#228B22',
+      border: '1px solid #228B22',
+      borderRadius: '6px',
+      fontSize: '14px',
+      fontWeight: '500',
+      cursor: 'pointer',
+      transition: 'all 0.2s ease'
+    }}
+    onMouseEnter={(e) => e.target.style.backgroundColor = '#e8f5e9'}
+    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+  >
+    Logout
+  </button>
+</div>
         {/* Navigation */}
         <div style={{ 
           display: 'flex', 
