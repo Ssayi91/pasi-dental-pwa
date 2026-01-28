@@ -1,0 +1,12 @@
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Fallback: ensure pasi-primary is defined */
+.text-pasi-primary {
+  color: #228B22 !important;
+}
+.bg-pasi-light {
+  background-color: #E8F5E9 !important;
+}
