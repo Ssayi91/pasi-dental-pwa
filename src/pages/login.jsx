@@ -34,13 +34,13 @@ export default function Login() {
       flexDirection: 'column',
       justifyContent: 'center',
       padding: '24px',
-      fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif'
+      fontFamily: 'Montserrat,-apple-system, BlinkMacSystemFont, sans-serif'
     }}>
       {/* Brand */}
       <div style={{ textAlign: 'center', marginBottom: '32px' }}>
         <h1 style={{
           fontSize: '28px',
-          fontWeight: 300,
+          fontWeight: 700,
           color: '#333333'
         }}>
           Pasi<span style={{ fontWeight: 600, color: '#228B22' }}>Dental</span>
@@ -59,7 +59,8 @@ export default function Login() {
             backgroundColor: '#fef2f2',
             color: '#b91c1c',
             borderRadius: '8px',
-            fontSize: '14px'
+            fontSize: '14px',
+            fontWeight: '700',
           }}>
             {error}
           </div>
