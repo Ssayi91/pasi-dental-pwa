@@ -108,7 +108,6 @@ export default function CreateInvoice() {
   return (
     <div
       style={{
-        // Match dashboard background
         backgroundImage: 'url(/pasi-bg.png)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -121,7 +120,7 @@ export default function CreateInvoice() {
         position: 'relative'
       }}
     >
-      {/* Soft white overlay */}
+      {/* Overlay */}
       <div style={{
         position: 'absolute',
         top: 0, left: 0, right: 0, bottom: 0,
@@ -237,68 +236,108 @@ export default function CreateInvoice() {
                 + Add Service
               </button>
             </div>
+
             {items.map((item, i) => (
               <div 
                 key={i} 
                 style={{ 
-                  display: 'grid', 
-                  gridTemplateColumns: '2fr 1fr 1fr auto', 
-                  gap: '12px', 
-                  alignItems: 'center',
-                  padding: '8px 0'
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px',
+                  padding: '12px 0',
+                  borderBottom: i < items.length - 1 ? '1px solid #edf2f7' : 'none',
+                  paddingBottom: i < items.length - 1 ? '12px' : '0'
                 }}
               >
+                {/* Description */}
                 <input 
-                  placeholder="e.g., Teeth Cleaning" 
+                  placeholder="Service description (e.g., Teeth Cleaning)" 
                   value={item.description} 
                   onChange={e => updateItem(i, 'description', e.target.value)} 
                   style={{ 
-                    padding: '10px', 
-                    border: 'none', 
-                    borderBottom: '1px solid #cbd5e0',
-                    backgroundColor: 'transparent'
+                    width: '100%',
+                    padding: '10px 12px',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '6px',
+                    fontSize: '15px',
+                    outline: 'none'
                   }} 
                 />
-                <input 
-                  type="number" 
-                  min="1" 
-                  value={item.quantity} 
-                  onChange={e => updateItem(i, 'quantity', e.target.value)} 
-                  style={{ 
-                    padding: '10px', 
-                    border: 'none', 
-                    borderBottom: '1px solid #cbd5e0', 
-                    textAlign: 'center',
-                    backgroundColor: 'transparent'
-                  }} 
-                />
-                <input 
-                  type="number" 
-                  step="0.01" 
-                  placeholder="0.00" 
-                  value={item.unitPrice} 
-                  onChange={e => updateItem(i, 'unitPrice', e.target.value)} 
-                  style={{ 
-                    padding: '10px', 
-                    border: 'none', 
-                    borderBottom: '1px solid #cbd5e0', 
-                    textAlign: 'right',
-                    backgroundColor: 'transparent'
-                  }} 
-                />
+
+                {/* Quantity & Price Row */}
+                <div style={{ 
+                  display: 'flex', 
+                  gap: '12px' 
+                }}>
+                  <div style={{ flex: 1 }}>
+                    <label style={{ 
+                      display: 'block', 
+                      fontSize: '12px', 
+                      color: '#718096', 
+                      marginBottom: '4px' 
+                    }}>
+                      Quantity
+                    </label>
+                    <input 
+                      type="number" 
+                      min="1" 
+                      value={item.quantity} 
+                      onChange={e => updateItem(i, 'quantity', e.target.value)} 
+                      style={{ 
+                        width: '100%',
+                        padding: '8px 12px',
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '6px',
+                        fontSize: '15px',
+                        outline: 'none'
+                      }} 
+                    />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <label style={{ 
+                      display: 'block', 
+                      fontSize: '12px', 
+                      color: '#718096', 
+                      marginBottom: '4px' 
+                    }}>
+                      Unit Price (Ksh)
+                    </label>
+                    <input 
+                      type="number" 
+                      step="0.01"
+                      placeholder="0.00"
+                      value={item.unitPrice} 
+                      onChange={e => updateItem(i, 'unitPrice', e.target.value)} 
+                      style={{ 
+                        width: '100%',
+                        padding: '8px 12px',
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '6px',
+                        fontSize: '15px',
+                        outline: 'none',
+                        textAlign: 'right'
+                      }} 
+                    />
+                  </div>
+                </div>
+
+                {/* Remove Button */}
                 {items.length > 1 && (
                   <button 
                     type="button" 
                     onClick={() => removeItem(i)} 
                     style={{ 
-                      color: '#e53e3e', 
-                      background: 'none', 
-                      border: 'none', 
-                      fontSize: '18px',
-                      cursor: 'pointer'
+                      alignSelf: 'flex-start',
+                      color: '#e53e3e',
+                      background: 'none',
+                      border: 'none',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      cursor: 'pointer',
+                      marginTop: '4px'
                     }}
                   >
-                    ×
+                    – Remove service
                   </button>
                 )}
               </div>
@@ -315,20 +354,20 @@ export default function CreateInvoice() {
               style={{ 
                 width: '100%', 
                 padding: '12px', 
-                border: 'none', 
-                borderBottom: '1px solid #cbd5e0', 
+                border: '1px solid #e2e8f0',
+                borderRadius: '6px',
                 resize: 'vertical',
-                backgroundColor: 'transparent'
+                fontSize: '15px',
+                outline: 'none'
               }} 
             />
           </div>
 
           {/* Payment Section */}
           <div style={{ 
-            backgroundColor: 'rgba(232, 245, 233, 0.7)', 
+            backgroundColor: 'rgba(232, 245, 233, 0.4)', 
             padding: '20px', 
-            borderRadius: '12px',
-            backdropFilter: 'blur(4px)'
+            borderRadius: '12px'
           }}>
             <h3 style={{ 
               fontSize: '16px', 
@@ -340,10 +379,9 @@ export default function CreateInvoice() {
             </h3>
             
             <div style={{ 
-              display: 'grid', 
-              gridTemplateColumns: '1fr 1fr', 
-              gap: '16px', 
-              marginBottom: '16px' 
+              display: 'flex', 
+              flexDirection: 'column',
+              gap: '16px'
             }}>
               <div>
                 <label style={{ display: 'block', fontSize: '14px', color: '#4a5568', marginBottom: '6px' }}>Payment Method</label>
@@ -353,15 +391,17 @@ export default function CreateInvoice() {
                   style={{ 
                     width: '100%', 
                     padding: '12px', 
-                    border: 'none', 
-                    borderBottom: '1px solid #cbd5e0',
-                    backgroundColor: 'transparent'
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '6px',
+                    fontSize: '15px',
+                    outline: 'none'
                   }}
                 >
                   <option value="cash">Cash</option>
                   <option value="mpesa">M-Pesa</option>
                 </select>
               </div>
+              
               <div>
                 <label style={{ display: 'block', fontSize: '14px', color: '#4a5568', marginBottom: '6px' }}>Amount Paid (Ksh) *</label>
                 <input
@@ -373,35 +413,44 @@ export default function CreateInvoice() {
                   style={{ 
                     width: '100%', 
                     padding: '12px', 
-                    border: 'none', 
-                    borderBottom: '1px solid #cbd5e0', 
-                    textAlign: 'right',
-                    backgroundColor: 'transparent'
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '6px',
+                    fontSize: '15px',
+                    outline: 'none',
+                    textAlign: 'right'
                   }}
                 />
               </div>
+
+              {paymentMethod === 'mpesa' && (
+                <div>
+                  <label style={{ display: 'block', fontSize: '14px', color: '#4a5568', marginBottom: '6px' }}>M-Pesa Code *</label>
+                  <input
+                    type="text"
+                    value={mpesaCode}
+                    onChange={e => setMpesaCode(e.target.value)}
+                    placeholder="e.g., LGR98HJK23"
+                    style={{ 
+                      width: '100%', 
+                      padding: '12px', 
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '6px',
+                      fontSize: '15px',
+                      outline: 'none'
+                    }}
+                  />
+                </div>
+              )}
             </div>
 
-            {paymentMethod === 'mpesa' && (
-              <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', fontSize: '14px', color: '#4a5568', marginBottom: '6px' }}>M-Pesa Code *</label>
-                <input
-                  type="text"
-                  value={mpesaCode}
-                  onChange={e => setMpesaCode(e.target.value)}
-                  placeholder="e.g., LGR98HJK23"
-                  style={{ 
-                    width: '100%', 
-                    padding: '12px', 
-                    border: 'none', 
-                    borderBottom: '1px solid #cbd5e0',
-                    backgroundColor: 'transparent'
-                  }}
-                />
-              </div>
-            )}
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '15px' }}>
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              fontSize: '15px',
+              marginTop: '20px',
+              paddingTop: '16px',
+              borderTop: '1px solid #d1fae5'
+            }}>
               <span>Total: <strong>Ksh {total.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong></span>
               <span>Paid: <strong>Ksh {paid.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong></span>
               {balance > 0 && (
