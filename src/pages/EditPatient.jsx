@@ -1,10 +1,11 @@
-// src/pages/AddPatient.jsx
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+// src/pages/EditPatient.jsx
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
-export default function AddPatient() {
+export default function EditPatient() {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -13,26 +14,51 @@ export default function AddPatient() {
   const [dob, setDob] = useState('');
   const [gender, setGender] = useState('');
   const [notes, setNotes] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
+
+  // Load patient data
+  useEffect(() => {
+    const fetchPatient = async () => {
+      try {
+        const docRef = doc(db, 'patients', id);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setName(data.name || '');
+          setPhone(data.phone || '');
+          setEmail(data.email || '');
+          setAddress(data.address || '');
+          setDob(data.dob || '');
+          setGender(data.gender || '');
+          setNotes(data.notes || '');
+        } else {
+          alert("Patient not found");
+          navigate('/patients');
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Failed to load patient");
+        navigate('/patients');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPatient();
+  }, [id, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name.trim()) return setError("Full name is required.");
     if (!phone.trim()) return setError("Phone number is required.");
 
-    setLoading(true);
+    setSaving(true);
     setError('');
 
     try {
-      const now = new Date();
-      const year = now.getFullYear();
-      const randomId = Math.floor(100 + Math.random() * 900);
-      const patientId = `PASI-${year}-${randomId}`;
-
-      await addDoc(collection(db, 'patients'), {
-        patientId,
+      const docRef = doc(db, 'patients', id);
+      await updateDoc(docRef, {
         name: name.trim(),
         phone: phone.trim(),
         email: email.trim(),
@@ -40,43 +66,43 @@ export default function AddPatient() {
         dob: dob || null,
         gender: gender || null,
         notes: notes.trim(),
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
+        updatedAt: new Date()
       });
-
-      setSuccess(true);
-      setName('');
-      setPhone('');
-      setEmail('');
-      setAddress('');
-      setDob('');
-      setGender('');
-      setNotes('');
+      navigate(`/patients/${id}`);
     } catch (err) {
       console.error(err);
-      setError("Failed to save patient. Please try again.");
+      setError("Failed to update patient. Please try again.");
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
+  if (loading) return (
+    <div style={{
+      backgroundImage: 'url(/pasi-bg.png)',
+      backgroundSize: 'cover',
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}>
+      <div style={{ color: '#228B22', fontSize: '18px' }}>Loading...</div>
+    </div>
+  );
+
   return (
-    <div
-      style={{
-        // Match dashboard background
-        backgroundImage: 'url(/pasi-bg.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
-        backgroundColor: '#f0f9f4', // fallback
-        minHeight: '100vh',
-        padding: '24px',
-        fontFamily: "'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif",
-        color: '#2d3748',
-        position: 'relative'
-      }}
-    >
-      {/* Soft white overlay — matches dashboard */}
+    <div style={{
+      backgroundImage: 'url(/pasi-bg.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed',
+      backgroundColor: '#f0f9f4',
+      minHeight: '100vh',
+      padding: '24px',
+      fontFamily: "'Montserrat', sans-serif",
+      color: '#2d3748',
+      position: 'relative'
+    }}>
       <div style={{
         position: 'absolute',
         top: 0, left: 0, right: 0, bottom: 0,
@@ -84,29 +110,18 @@ export default function AddPatient() {
         zIndex: 0
       }}></div>
 
-      {/* Content */}
-      <div style={{ 
-        maxWidth: '600px', 
-        margin: '0 auto', 
-        position: 'relative', 
-        zIndex: 1 
-      }}>
+      <div style={{ maxWidth: '600px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div style={{ 
           display: 'flex', 
           justifyContent: 'space-between', 
-          alignItems: 'center', 
-          marginBottom: '24px' 
+          alignItems: 'center',
+          marginBottom: '24px'
         }}>
-          <h1 style={{ 
-            fontSize: '24px', 
-            color: '#228B22', 
-            fontWeight: '600', 
-            margin: 0 
-          }}>
-            Add New Patient
+          <h1 style={{ fontSize: '24px', color: '#228B22', fontWeight: '600' }}>
+            Edit Patient
           </h1>
           <button
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate(`/patients/${id}`)}
             style={{
               padding: '6px 12px',
               backgroundColor: 'transparent',
@@ -118,7 +133,7 @@ export default function AddPatient() {
               cursor: 'pointer'
             }}
           >
-            ← Dashboard
+            ← Back
           </button>
         </div>
 
@@ -131,18 +146,6 @@ export default function AddPatient() {
             marginBottom: '24px'
           }}>
             {error}
-          </div>
-        )}
-
-        {success && (
-          <div style={{
-            padding: '12px',
-            backgroundColor: '#ecfdf5',
-            color: '#065f46',
-            borderRadius: '8px',
-            marginBottom: '24px'
-          }}>
-            ✅ Patient saved successfully!
           </div>
         )}
 
@@ -309,7 +312,7 @@ export default function AddPatient() {
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={loading}
+            disabled={saving}
             style={{
               padding: '14px',
               backgroundColor: '#228B22',
@@ -318,11 +321,11 @@ export default function AddPatient() {
               borderRadius: '10px',
               fontSize: '16px',
               fontWeight: '600',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              opacity: loading ? 0.8 : 1
+              cursor: saving ? 'not-allowed' : 'pointer',
+              opacity: saving ? 0.8 : 1
             }}
           >
-            {loading ? 'Saving...' : 'Save Patient'}
+            {saving ? 'Saving...' : 'Update Patient'}
           </button>
         </form>
       </div>

@@ -1,0 +1,22 @@
+/* src/print.css */
+@media print {
+  .no-print,
+  .no-print *,
+  button,
+  input,
+  select,
+  textarea {
+    display: none !important;
+  }
+  body, #root, div {
+    background: white !important;
+    color: black !important;
+  }
+  #invoice-print {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 20px !important;
+    box-shadow: none !important;
+  }
+}

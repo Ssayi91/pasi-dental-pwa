@@ -45,7 +45,7 @@ export default function Login() {
         }}>
           Pasi<span style={{ fontWeight: 600, color: '#228B22' }}>Dental</span>
         </h1>
-        <p style={{ marginTop: '8px', fontSize: '14px', color: '#6b7280' }}>
+        <p style={{ marginTop: '8px', fontSize: '16px', color: '#6b7280' }}>
           Clinic Management System
         </p>
       </div>
