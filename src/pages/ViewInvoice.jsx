@@ -1,7 +1,7 @@
 // src/pages/ViewInvoice.jsx
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, deleteDoc } from 'firebase/firestore'; // ← Added deleteDoc
 import { db } from '../lib/firebase';
 
 export default function ViewInvoice() {
@@ -31,6 +31,19 @@ export default function ViewInvoice() {
     };
     fetchInvoice();
   }, [id, navigate]);
+
+  // 🔥 Delete handler
+  const handleDelete = async () => {
+    if (window.confirm("Delete this invoice? This cannot be undone.")) {
+      try {
+        await deleteDoc(doc(db, 'invoices', id));
+        navigate('/invoices');
+      } catch (err) {
+        console.error(err);
+        alert("Failed to delete invoice");
+      }
+    }
+  };
 
   const handlePrint = () => {
     window.print();
@@ -100,7 +113,7 @@ export default function ViewInvoice() {
             height: '100%',
             objectFit: 'cover',
             zIndex: -1,
-            opacity: 0.03, // Very subtle
+            opacity: 0.03,
             pointerEvents: 'none'
           }}
         />
@@ -216,6 +229,23 @@ export default function ViewInvoice() {
         >
           Print Invoice
         </button>
+        
+        {/* 🔥 Delete Button */}
+        {/* <button
+          onClick={handleDelete}
+          style={{
+            padding: '12px 24px',
+            backgroundColor: '#fee',
+            color: '#c53030',
+            border: 'none',
+            borderRadius: '8px',
+            fontWeight: '500',
+            cursor: 'pointer'
+          }}
+        >
+          Delete Invoice
+        </button>
+         */}
         <button
           onClick={() => navigate('/dashboard')}
           style={{
